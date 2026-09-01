@@ -6,22 +6,15 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static('public')); // Serves your frontend files
+app.use(express.static('public'));
 
 let players = {};
 
 io.on('connection', (socket) => {
     console.log(`Player connected: ${socket.id}`);
-    
-    // Create a new player entry
     players[socket.id] = { x: 100, y: 100, color: '#' + Math.floor(Math.random()*16777215).toString(16) };
-
-    // Send the current players list to the new player
     socket.emit('currentPlayers', players);
-    // Broadcast the new player to everyone else
     socket.broadcast.emit('newPlayer', { id: socket.id, player: players[socket.id] });
-
-    // Listen for movement updates from clients
     socket.on('playerMovement', (movementData) => {
         if (players[socket.id]) {
             players[socket.id].x = movementData.x;
