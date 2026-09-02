@@ -19,7 +19,6 @@ io.on('connection', (socket) => {
         if (players[socket.id]) {
             players[socket.id].x = movementData.x;
             players[socket.id].y = movementData.y;
-            // Send updated position to everyone
             io.emit('playerMoved', { id: socket.id, x: players[socket.id].x, y: players[socket.id].y });
         }
     });
@@ -32,4 +31,4 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Running on port ${PORT}`)); // ok
+server.listen(PORT, () => console.log(`Running on port ${PORT}`)); 
