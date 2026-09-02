@@ -23,10 +23,10 @@ socket.on('playerDisconnected', (id) => { delete players[id]; });
 function update() {
     if (myId && players[myId]) {
         let moved = false;
-        if (keys.ArrowUp || keys.W)    { players[myId].y -= 4; moved = true; }
-        if (keys.ArrowDown || keys.S)  { players[myId].y += 4; moved = true; }
-        if (keys.ArrowLeft || keys.A)  { players[myId].x -= 4; moved = true; }
-        if (keys.ArrowRight || keys.D) { players[myId].x += 4; moved = true; }
+        if (keys.ArrowUp || keys.W)    { players[myId].y -= 1; moved = true; }
+        if (keys.ArrowDown || keys.S)  { players[myId].y += 1; moved = true; }
+        if (keys.ArrowLeft || keys.A)  { players[myId].x -= 1; moved = true; }
+        if (keys.ArrowRight || keys.D) { players[myId].x += 1; moved = true; }
 
         if (moved) {
             socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });
