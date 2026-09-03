@@ -33,7 +33,7 @@ socket.on('playerDisconnected', (id) => { delete players[id]; });
 function update() {
     if (myId && players[myId]) {
         let moved = false;
-        if (keys.ArrowUp || keys2.W || event.code === 'Space')    { players[myId].y -= 4; moved = true; }
+        if (keys.ArrowUp || keys2.W || Event.code === 'Space'){Event.preventDefault(); layers[myId].y -= 4; moved = true; }
         if (keys.ArrowDown || keys2.S)  { players[myId].y += 4; moved = true; }
         if (keys.ArrowLeft || keys2.A)  { players[myId].x -= 4; moved = true; }
         if (keys.ArrowRight || keys2.D) { players[myId].x += 4; moved = true; }
