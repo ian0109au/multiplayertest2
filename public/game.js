@@ -7,10 +7,17 @@ let myId = null;
 
 const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false};
 const keys2 = { W: false, A: false, S: false, D: false};
-window.addEventListener('keydown', (e) => { if (e.key in keys) keys[e.key] = true; });
-window.addEventListener('keyup', (e) => { if (e.key in keys) keys[e.key] = false; });
-window.addEventListener('keydown', (e) => { if (e.key in keys2) keys2[e.key] = true; });
-window.addEventListener('keyup', (e) => { if (e.key in keys2) keys2[e.key] = false; });
+window.addEventListener('keydown', (e) => {
+    if (e.key in keys) keys[e.key] = true; 
+    const keyUpper = e.key.toUpperCase();
+    if (keyUpper in keys2) keys2[keyUpper] = true; 
+});
+window.addEventListener('keyup', (e) => {
+    if (e.key in keys) keys[e.key] = false;
+    const keyUpper = e.key.toUpperCase();
+    if (keyUpper in keys2) keys2[keyUpper] = false; 
+});
+
 
 socket.on('connect', () => { myId = socket.id; });
 socket.on('currentPlayers', (serverPlayers) => { players = serverPlayers; });
