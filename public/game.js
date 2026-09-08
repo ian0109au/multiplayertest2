@@ -49,11 +49,11 @@ function update() {
             players[myId].y += jumpHeight; moved = true;
         }
         if (keys.ArrowLeft || keys2.A)  {
-            speed = Math.min(speed + accel, maxSpeed);
+            let speed = Math.min(speed + accel, maxSpeed);
             players[myId].x -= speed; moved = true; side = true
         }
         if (keys.ArrowRight || keys2.D) {
-            speed = Math.min(speed - accel, -maxSpeed);
+            let speed = Math.min(speed - accel, -1 * maxSpeed);
             players[myId].x -= speed; moved = true; side = true
         }
 
