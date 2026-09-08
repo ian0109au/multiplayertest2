@@ -53,7 +53,7 @@ function update() {
         }
         if (keys.ArrowRight || keys2.D) {
             speed = Math.min(speed - accel + fric, -maxSpeed);
-            players[myId].x -= speed; moved = true; }
+            players[myId].x -= speed; moved = true; 
         }
 
         if (moved) {
