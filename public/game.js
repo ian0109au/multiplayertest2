@@ -41,25 +41,26 @@ socket.on('playerDisconnected', (id) => { delete players[id]; });
 function update() {
     if (myId && players[myId]) {
         let moved = false;
+        let side = false;
         if (keys.ArrowUp || keys2.W || keys.Space) {
-            players[myId].y -= jumpHeight;
+            players[myId].y -= jumpHeight; moved = true;
         }
         if (keys.ArrowDown || keys2.S)  { 
-            players[myId].y += jumpHeight;
+            players[myId].y += jumpHeight; moved = true;
         }
         if (keys.ArrowLeft || keys2.A)  {
             speed = Math.min(speed + accel, maxSpeed);
-            players[myId].x -= speed; moved = true; 
+            players[myId].x -= speed; moved = true; side = true
         }
         if (keys.ArrowRight || keys2.D) {
             speed = Math.min(speed - accel, -maxSpeed);
-            players[myId].x -= speed; moved = true; 
+            players[myId].x -= speed; moved = true; side = true
         }
 
         if (moved) {
             socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });
         }
-        else{
+        if(!side){
             if (speed > 0) {
                 speed = Math.max(speed - fric, 0);
             }
