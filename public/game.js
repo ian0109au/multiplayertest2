@@ -1,6 +1,12 @@
 const socket = io();
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const fric = 0.5
+const accel = 1
+const speed = 0
+const maxSpeed = 5
+const jumpHeight = 10
+const grav = 0.5
 
 let players = {};
 let myId = null;
@@ -35,10 +41,20 @@ socket.on('playerDisconnected', (id) => { delete players[id]; });
 function update() {
     if (myId && players[myId]) {
         let moved = false;
-        if (keys.ArrowUp || keys2.W || keys.Space) {players[myId].y -= 4; moved = true; }
-        if (keys.ArrowDown || keys2.S)  { players[myId].y += 4; moved = true; }
-        if (keys.ArrowLeft || keys2.A)  { players[myId].x -= 4; moved = true; }
-        if (keys.ArrowRight || keys2.D) { players[myId].x += 4; moved = true; }
+        if (keys.ArrowUp || keys2.W || keys.Space) {
+            players[myId].y -= jumpHeight; moved = true; 
+        }
+        if (keys.ArrowDown || keys2.S)  { 
+            players[myId].y += jumpHeight; moved = true; 
+        }
+        if (keys.ArrowLeft || keys2.A)  {
+            speed = Math.min(speed + accel - fric, maxSpeed);
+            players[myId].x -= speed; moved = true; 
+        }
+        if (keys.ArrowRight || keys2.D) {
+            speed = Math.min(speed - accel + fric, -maxSpeed);
+            players[myId].x -= speed; moved = true; }
+        }
 
         if (moved) {
             socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });
