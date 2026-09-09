@@ -49,29 +49,26 @@ function update() {
             players[myId].y += jumpHeight; moved = true;
         }
         if (keys.ArrowLeft || keys2.A)  {
-            speed = Math.min(speed + accel - fric, maxSpeed);
+            speed = Math.min(speed + accel, maxSpeed);
             side = true;
         }
         if (keys.ArrowRight || keys2.D) {
-            speed = Math.max(speed - accel + fric, -maxSpeed);
+            speed = Math.max(speed - accel, -maxSpeed);
             side = true;
         }
-        players[myId].x -= speed; 
         if (side) {
             moved = true; 
         }
-        
+        if (speed > 0) {
+            speed = Math.max(speed - fric, 0);
+        }
+        else if (speed < 0) {
+            speed = Math.min(speed + fric, 0);
+        }
+        players[myId].x -= speed; 
         if (moved) {             
             socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });         
         }    
-        if(!side){
-            if (speed > 0) {
-                speed = Math.max(speed - fric, 0);
-            }
-            else if (speed < 0) {
-                speed = Math.min(speed + fric, 0);
-            }
-        }
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
