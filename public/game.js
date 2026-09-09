@@ -53,7 +53,7 @@ function update() {
             side = true;
         }
         if (keys.ArrowRight || keys2.D) {
-            speed = Math.min(speed - accel + fric, -maxSpeed);
+            speed = Math.max(speed - accel + fric, -maxSpeed);
             side = true;
         }
 
