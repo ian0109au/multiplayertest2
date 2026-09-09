@@ -4,6 +4,7 @@ const ctx = canvas.getContext('2d');
 const fric = 0.1
 const accel = 1
 let speed = 0
+let jump = 0
 const maxSpeed = 5
 const jumpHeight = 10
 const grav = 0.5
@@ -41,23 +42,22 @@ socket.on('playerDisconnected', (id) => { delete players[id]; });
 function update() {
     if (myId && players[myId]) {
         let moved = false;
-        let side = false;
         if (keys.ArrowUp || keys2.W || keys.Space) {
             players[myId].y -= jumpHeight; moved = true;
         }
         if (keys.ArrowDown || keys2.S)  { 
-            players[myId].y += jumpHeight; moved = true;
+            jump += jumpHeight; moved = true;
         }
         if (keys.ArrowLeft || keys2.A)  {
             speed = Math.min(speed + accel, maxSpeed);
-            side = true;
+            moved = true;
         }
         if (keys.ArrowRight || keys2.D) {
             speed = Math.max(speed - accel, -maxSpeed);
-            side = true;
+            moved = true;
         }
-        if (side) {
-            moved = true; 
+        if (jump > 0) {
+            jump = Math.max(jump - grav, 0);
         }
         if (speed > 0) {
             speed = Math.max(speed - fric, 0);
@@ -65,6 +65,7 @@ function update() {
         else if (speed < 0) {
             speed = Math.min(speed + fric, 0);
         }
+        players[myId].y += jump;
         players[myId].x -= speed; 
         if (moved) {             
             socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });         
