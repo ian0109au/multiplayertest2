@@ -7,7 +7,7 @@ let speed = 0
 let jump = 0
 const maxSpeed = 5
 const jumpHeight = 10
-const grav = 0.5
+const grav = 0.1
 
 let players = {};
 let myId = null;
@@ -43,7 +43,7 @@ function update() {
     if (myId && players[myId]) {
         let moved = false;
         if (keys.ArrowUp || keys2.W || keys.Space) {
-            players[myId].y -= jumpHeight; moved = true;
+            //empty
         }
         if (keys.ArrowDown || keys2.S)  { 
             jump += jumpHeight; moved = true;
