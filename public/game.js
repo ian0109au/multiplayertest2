@@ -56,7 +56,7 @@ function update() {
             speed = Math.max(speed - accel, -maxSpeed);
             moved = true;
         }
-        jump -= grav;
+        jump += grav;
         if (speed > 0) {
             speed = Math.max(speed - fric, 0);
         }
