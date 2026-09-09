@@ -56,9 +56,8 @@ function update() {
             speed = Math.max(speed - accel + fric, -maxSpeed);
             side = true;
         }
-
+        players[myId].x -= speed; 
         if (side) {
-            players[myId].x -= speed; 
             moved = true; 
         }
         
