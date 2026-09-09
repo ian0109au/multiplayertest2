@@ -50,15 +50,21 @@ function update() {
         }
         if (keys.ArrowLeft || keys2.A)  {
             speed = Math.min(speed + accel - fric, maxSpeed);
+            side = true;
         }
         if (keys.ArrowRight || keys2.D) {
-            speed = Math.min(speed - accel + fric, -1 * maxSpeed);
+            speed = Math.min(speed - accel + fric, -maxSpeed);
+            side = true;
         }
-        players[myId].x -= speed; moved = true; side = true
 
-        if (moved) {
-            socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });
+        if (side) {
+            players[myId].x -= speed; 
+            moved = true; 
         }
+        
+        if (moved) {             
+            socket.emit('playerMovement', { x: players[myId].x, y: players[myId].y });         
+        }    
         if(!side){
             if (speed > 0) {
                 speed = Math.max(speed - fric, 0);
