@@ -2,7 +2,7 @@ const socket = io();
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const fric = 0.5
-const accel = 0.5
+const accel = 1
 let speed = 0
 const maxSpeed = 5
 const jumpHeight = 10
@@ -49,11 +49,11 @@ function update() {
             players[myId].y += jumpHeight; moved = true;
         }
         if (keys.ArrowLeft || keys2.A)  {
-            speed = Math.min(speed + accel, maxSpeed);
+            speed = Math.min(speed + accel - fric, maxSpeed);
             players[myId].x -= speed; moved = true; side = true
         }
         if (keys.ArrowRight || keys2.D) {
-            speed = Math.min(speed - accel, -1 * maxSpeed);
+            speed = Math.min(speed - accel + fric, -1 * maxSpeed);
             players[myId].x -= speed; moved = true; side = true
         }
 
