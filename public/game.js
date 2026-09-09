@@ -43,10 +43,10 @@ function update() {
     if (myId && players[myId]) {
         let moved = false;
         if (keys.ArrowUp || keys2.W || keys.Space) {
-            //empty
+            jump += jumpHeight; moved = true;
         }
         if (keys.ArrowDown || keys2.S)  { 
-            jump += jumpHeight; moved = true;
+            //empty
         }
         if (keys.ArrowLeft || keys2.A)  {
             speed = Math.min(speed + accel, maxSpeed);
