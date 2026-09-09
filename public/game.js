@@ -43,7 +43,7 @@ function update() {
     if (myId && players[myId]) {
         let moved = false;
         if (keys.ArrowUp || keys2.W || keys.Space) {
-            jump += jumpHeight; moved = true;
+            jump -= jumpHeight; moved = true;
         }
         if (keys.ArrowDown || keys2.S)  { 
             //empty
