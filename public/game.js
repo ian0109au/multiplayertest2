@@ -46,6 +46,15 @@ class Player {
   }
   update() {
     let moved = false;
+    const floorY = canvas.height - 20; 
+    if (this.y >= floorY) {
+        this.y = floorY;
+        this.jump = 0;
+        this.grounded = true;
+    }
+    else {
+        this.grounded = false;
+    }
     if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
         this.jump -= jumpHeight;
         moved = true;
@@ -71,12 +80,6 @@ class Player {
     this.y += this.jump;
     this.x -= this.speed; 
     moved = true;
-    const floorY = canvas.height - 20; 
-    if (this.y >= floorY) {
-        this.y = floorY;
-        this.jump = 0;
-        this.grounded = true;
-    }
     if (moved) {             
         socket.emit('playerMovement', { x: this.x, y: this.y });         
     }    
