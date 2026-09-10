@@ -122,10 +122,8 @@ socket.on('playerDisconnected', (id) => {
     delete players[id]; 
 });
 
-function update() {
-    if (localPlayer) {
-        localPlayer.update();
-    }
+function update() {=
+    localPlayer.update();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let id in players) {
         if (id === myId && localPlayer) {
