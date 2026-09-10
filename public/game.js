@@ -69,7 +69,7 @@ class Player {
     }
     this.y += this.jump;
     this.x -= this.speed; 
-
+    moved = true;
     const floorY = canvas.height - 20; 
     if (this.y >= floorY) {
         this.y = floorY;
