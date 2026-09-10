@@ -50,15 +50,18 @@ class Player {
     let moved = false;
     if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
         this.jump -= jumpHeight;
+        moved = true;
     }
     if (keys.ArrowDown || keys2.S)  { 
         //empty
     }
     if (keys.ArrowLeft || keys2.A)  {
         this.speed = Math.min(this.speed + accel, maxSpeed);
+        moved = true;
     }
     if (keys.ArrowRight || keys2.D) {
         this.speed = Math.max(this.speed - accel, -maxSpeed);
+        moved = true;
     }
     this.jump += grav;
     if (this.speed > 0) {
@@ -76,11 +79,11 @@ class Player {
         this.jump = 0;
         this.grounded = true;
     }
-    if (oldx !== this.x || oldy !== this.y) {
-        moved = true;
-        oldx = this.x;
-        oldy = this.y;
-    }
+    //if (oldx !== this.x || oldy !== this.y) {
+    //    moved = true;
+    //    oldx = this.x;
+    //    oldy = this.y;
+    //}
     if (moved) {             
         socket.emit('playerMovement', { x: this.x, y: this.y });         
     }    
