@@ -46,6 +46,7 @@ class Player {
   }
   update() {
     let moved = false;
+    grounded = false;
     if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
         this.jump -= jumpHeight;
         moved = true;
