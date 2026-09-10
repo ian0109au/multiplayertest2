@@ -25,6 +25,8 @@ class Player {
   constructor(x, y, color) {
     this.x = x;
     this.y = y;
+    let oldx = this.x;
+    let oldy = this.y;
     this.speed = 0;
     this.jump = 0;
     this.color = color;
@@ -47,18 +49,16 @@ class Player {
   update() {
     let moved = false;
     if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
-        this.jump -= jumpHeight; moved = true;
+        this.jump -= jumpHeight;
     }
     if (keys.ArrowDown || keys2.S)  { 
         //empty
     }
     if (keys.ArrowLeft || keys2.A)  {
         this.speed = Math.min(this.speed + accel, maxSpeed);
-        moved = true;
     }
     if (keys.ArrowRight || keys2.D) {
         this.speed = Math.max(this.speed - accel, -maxSpeed);
-        moved = true;
     }
     this.jump += grav;
     if (this.speed > 0) {
@@ -76,7 +76,11 @@ class Player {
         this.jump = 0;
         this.grounded = true;
     }
-
+    if (oldx !== this.x || oldy !== this.y) {
+        moved = true;
+        oldx = this.x;
+        oldy = this.y;
+    }
     if (moved) {             
         socket.emit('playerMovement', { x: this.x, y: this.y });         
     }    
@@ -123,7 +127,9 @@ socket.on('playerDisconnected', (id) => {
 });
 
 function update() {
-    localPlayer.update();
+    if (localPlayer) {
+        localPlayer.update();
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let id in players) {
         if (id === myId && localPlayer) {
