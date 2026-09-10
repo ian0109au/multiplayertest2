@@ -5,7 +5,7 @@ const fric = 0.1
 const accel = 1
 const maxSpeed = 5
 const jumpHeight = 10
-const grav = 0.1
+const grav = 0.4
 
 let players = {};
 let localPlayer = null;
@@ -25,8 +25,6 @@ class Player {
   constructor(x, y, color) {
     this.x = x;
     this.y = y;
-    let oldx = this.x;
-    let oldy = this.y;
     this.speed = 0;
     this.jump = 0;
     this.color = color;
@@ -79,11 +77,6 @@ class Player {
         this.jump = 0;
         this.grounded = true;
     }
-    //if (oldx !== this.x || oldy !== this.y) {
-    //    moved = true;
-    //    oldx = this.x;
-    //    oldy = this.y;
-    //}
     if (moved) {             
         socket.emit('playerMovement', { x: this.x, y: this.y });         
     }    
