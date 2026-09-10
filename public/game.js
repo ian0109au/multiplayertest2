@@ -8,6 +8,7 @@ const jumpHeight = 10
 const grav = 0.1
 
 let players = {};
+let localPlayer = null;
 let myId = null;
 
 class col {
@@ -27,11 +28,12 @@ class Player {
     this.speed = 0;
     this.jump = 0;
     this.color = color;
+    this.grounded = false;
     this.hitbox = {
-      offsetX: 20,
-      offsetY: 40,
-      width: 24,
-      height: 24
+      offsetX: 0,
+      offsetY: 0,
+      width: 20,
+      height: 20
     };
   }
   getHitbox() {
@@ -44,7 +46,7 @@ class Player {
   }
   update() {
     let moved = false;
-    if (keys.ArrowUp || keys2.W || keys.Space) {
+    if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
         this.jump -= jumpHeight; moved = true;
     }
     if (keys.ArrowDown || keys2.S)  { 
@@ -67,6 +69,14 @@ class Player {
     }
     this.y += this.jump;
     this.x -= this.speed; 
+
+    const floorY = canvas.height - 20; 
+    if (this.y >= floorY) {
+        this.y = floorY;
+        this.jump = 0;
+        this.grounded = true;
+    }
+
     if (moved) {             
         socket.emit('playerMovement', { x: this.x, y: this.y });         
     }    
@@ -88,25 +98,44 @@ window.addEventListener('keyup', (e) => {
     if (keyUpper in keys2) keys2[keyUpper] = false;
 });
 
-socket.on('connect', () => { myId = socket.id; });
-socket.on('currentPlayers', (serverPlayers) => { players = serverPlayers; });
-socket.on('newPlayer', (data) => { players[data.id] = data.player; });
+socket.on('connect', () => {
+    myId = socket.id; 
+});
+
+socket.on('currentPlayers', (serverPlayers) => { 
+    players = serverPlayers;
+    if (players[myId] && !localPlayer) { 
+        const sData = players[myId];
+        localPlayer = new Player(sData.x, sData.y, sData.color);
+    }
+});
+socket.on('newPlayer', (data) => { 
+    players[data.id] = data.player; 
+});
 socket.on('playerMoved', (data) => {
     if (players[data.id]) {
         players[data.id].x = data.x;
         players[data.id].y = data.y;
     }
 });
-socket.on('playerDisconnected', (id) => { delete players[id]; });
+socket.on('playerDisconnected', (id) => { 
+    delete players[id]; 
+});
 
 function update() {
-    if (myId && players[myId]) {
-        players[myId].update();
+    if (localPlayer) {
+        localPlayer.update();
     }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let id in players) {
-        ctx.fillStyle = players[id].color;
-        ctx.fillRect(players[id].x, players[id].y, 20, 20);
+        if (id === myId && localPlayer) {
+            ctx.fillStyle = players[id].color;
+            ctx.fillRect(players[id].x, players[id].y, 20, 20);
+        }
+        else {
+            ctx.fillStyle = players[id].color || '#ffffff';
+            ctx.fillRect(players[id].x, players[id].y, 20, 20);
+        }
     }
 
     requestAnimationFrame(update);
