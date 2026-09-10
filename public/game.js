@@ -21,11 +21,12 @@ class col {
 }
 
 class Player {
-  constructor(x, y) {
+  constructor(x, y, color) {
     this.x = x;
     this.y = y;
     this.speed = 0;
     this.jump = 0;
+    this.color = color;
     this.hitbox = {
       offsetX: 20,
       offsetY: 40,

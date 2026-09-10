@@ -10,9 +10,18 @@ app.use(express.static('public'));
 
 let players = {};
 
+class ServerPlayer {
+  constructor(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+  }
+}
+
 io.on('connection', (socket) => {
     console.log(`Player connected: ${socket.id}`);
-    players[socket.id] = { x: 100, y: 100, color: '#' + Math.floor(Math.random()*16777215).toString(16) };
+    const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
+    players[socket.id] = new ServerPlayer(100, 100, randomColor);
     socket.emit('currentPlayers', players);
     socket.broadcast.emit('newPlayer', { id: socket.id, player: players[socket.id] });
     socket.on('playerMovement', (movementData) => {
