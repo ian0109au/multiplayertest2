@@ -18,6 +18,46 @@ class col {
                a.y < b.y + b.height &&
                a.y + a.height > b.y;
     }
+    static resolvePassThrough(player, platform) {
+    const box = player.getHitbox();
+
+    if (this.checkAABB(box, platform)) {
+      const isFalling = player.jump > 0;
+      const playerFeet = box.y + box.height;
+      const wasAboveBefore = (playerFeet - player.jump) <= platform.y + 4;
+
+      if (isFalling && wasAboveBefore) {
+        player.y = platform.y - player.hitbox.offsetY - player.hitbox.height;
+        return true;
+      }
+    }
+    return false;
+    }
+    static resolveSolid(player, platform) {
+    const box = player.getHitbox();
+
+    if (!this.checkAABB(box, platform)) return false;
+
+    const overlapX = Math.min(box.x + box.width, platform.x + platform.width) - Math.max(box.x, platform.x);
+    const overlapY = Math.min(box.y + box.height, platform.y + platform.height) - Math.max(box.y, platform.y);
+
+    if (overlapX < overlapY) {
+      if (box.x + box.width / 2 < platform.x + platform.width / 2) {
+        player.x -= overlapX;
+      } else {
+        player.x += overlapX;
+      }
+      player.speed = 0;
+    } else {
+      if (box.y + box.height / 2 < platform.y + platform.height / 2) {
+        player.y -= overlapY;
+      } else {
+        player.y += overlapY;
+        player.jump = 0;
+      }
+    }
+    return true;
+  }
     
 }
 
@@ -86,6 +126,16 @@ class Player {
   }
 }
 
+class Platform {
+  constructor(x, y, width, height, type) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.type = type; // 'solid' or 'passThrough'
+  }
+}
+
 const keys = { ArrowUp: false, ArrowDown: false, ArrowLeft: false, ArrowRight: false, Space: false};
 const keys2 = { W: false, A: false, S: false, D: false};
 window.addEventListener('keydown', (e) => {
@@ -124,6 +174,10 @@ socket.on('playerMoved', (data) => {
 socket.on('playerDisconnected', (id) => { 
     delete players[id]; 
 });
+const levelPlatforms = [
+  new Platform(50, 400, 150, 20, 'passThrough'),
+  new Platform(200, 250, 100, 20, 'solid')
+];
 
 function update() {
     if (localPlayer) {
@@ -140,6 +194,17 @@ function update() {
             ctx.fillRect(players[id].x, players[id].y, 20, 20);
         }
     }
+    for (let platform of levelPlatforms) {
+        if (platform.type === 'solid') {
+        CollisionEngine.resolveSolid(localPlayer, platform);
+        } else if (platform.type === 'passThrough') {
+        CollisionEngine.resolvePassThrough(localPlayer, platform);
+        }
+    }
+    levelPlatforms.forEach(platform => {
+        ctx.fillStyle = platform.type === 'solid' ? '#8B4513' : '#228B22';
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+    });
 
     requestAnimationFrame(update);
 }
