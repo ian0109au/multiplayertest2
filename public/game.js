@@ -4,8 +4,8 @@ const ctx = canvas.getContext('2d');
 const fric = 0.1
 const accel = 1
 const maxSpeed = 5
-const jumpHeight = 5
-const grav = 0.1
+const jumpHeight = 10
+const grav = 0.4
 
 let players = {};
 let localPlayer = null;
