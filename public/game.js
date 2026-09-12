@@ -191,7 +191,7 @@ socket.on('playerDisconnected', (id) => {
 });
 const levelPlatforms = [
   new Platform(50, 500, 150, 20, 'pass'),
-  new Platform(200, 300, 100, 20, 'solid')
+  new Platform(200, 400, 100, 20, 'solid')
 ];
 
 function update() {
