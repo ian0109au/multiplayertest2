@@ -86,13 +86,14 @@ class Player {
     };
   }
   update() {
-    grounded = false;
+    let check = false;
+    this.grounded = false;
     for (let platform of levelPlatforms) {
         if (platform.type === 'solid') {
-        check = CollisionEngine.resolveSolid(localPlayer, platform);
+      check = col.resolveSolid(this, platform);
         } 
         else if (platform.type === 'pass') {
-        check = CollisionEngine.resolvePass(localPlayer, platform);
+      check = col.resolvePass(this, platform);
         }
         if (check) {
             break;
@@ -109,8 +110,7 @@ class Player {
         this.jump = 0;
         this.grounded = true;
     }
-    }
-    if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
+    if ((keys.ArrowUp || keys2.W || keys.Space) && this.grounded) {
         this.jump -= jumpHeight;
         moved = true;
     }
