@@ -190,8 +190,8 @@ socket.on('playerDisconnected', (id) => {
     delete players[id]; 
 });
 const levelPlatforms = [
-  new Platform(50, 600, 150, 20, 'pass'),
-  new Platform(200, 400, 100, 20, 'solid')
+  new Platform(50, 500, 150, 20, 'pass'),
+  new Platform(200, 300, 100, 20, 'solid')
 ];
 
 function update() {
