@@ -85,6 +85,20 @@ class Player {
     };
   }
   update() {
+    let check = false;
+    grounded = false;
+    for (let platform of levelPlatforms) {
+        if (platform.type === 'solid') {
+        check = CollisionEngine.resolveSolid(localPlayer, platform);
+        } 
+        else if (platform.type === 'passThrough') {
+        check = CollisionEngine.resolvePassThrough(localPlayer, platform);
+        }
+        if (check) {
+            this.grounded = true;
+            break;
+        }
+    }
     let moved = false;
     const floorY = canvas.height - 20; 
     if (this.y >= floorY) {
@@ -92,8 +106,7 @@ class Player {
         this.jump = 0;
         this.grounded = true;
     }
-    else {
-        this.grounded = false;
+    else if 
     }
     if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
         this.jump -= jumpHeight;
@@ -192,13 +205,6 @@ function update() {
         else {
             ctx.fillStyle = players[id].color || '#ffffff';
             ctx.fillRect(players[id].x, players[id].y, 20, 20);
-        }
-    }
-    for (let platform of levelPlatforms) {
-        if (platform.type === 'solid') {
-        CollisionEngine.resolveSolid(localPlayer, platform);
-        } else if (platform.type === 'passThrough') {
-        CollisionEngine.resolvePassThrough(localPlayer, platform);
         }
     }
     levelPlatforms.forEach(platform => {
