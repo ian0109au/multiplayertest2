@@ -18,7 +18,7 @@ class col {
                a.y < b.y + b.height &&
                a.y + a.height > b.y;
     }
-    static resolvePassThrough(player, platform) {
+    static resolvePass(player, platform) {
     const box = player.getHitbox();
 
     if (this.checkAABB(box, platform)) {
@@ -69,6 +69,7 @@ class Player {
     this.jump = 0;
     this.color = color;
     this.grounded = false;
+    let check = false;
     this.hitbox = {
       offsetX: 0,
       offsetY: 0,
@@ -85,17 +86,15 @@ class Player {
     };
   }
   update() {
-    let check = false;
     grounded = false;
     for (let platform of levelPlatforms) {
         if (platform.type === 'solid') {
         check = CollisionEngine.resolveSolid(localPlayer, platform);
         } 
-        else if (platform.type === 'passThrough') {
-        check = CollisionEngine.resolvePassThrough(localPlayer, platform);
+        else if (platform.type === 'pass') {
+        check = CollisionEngine.resolvePass(localPlayer, platform);
         }
         if (check) {
-            this.grounded = true;
             break;
         }
     }
@@ -106,7 +105,10 @@ class Player {
         this.jump = 0;
         this.grounded = true;
     }
-    else if 
+    else if (check) {
+        this.jump = 0;
+        this.grounded = true;
+    }
     }
     if ((keys.ArrowUp || keys2.W || keys.Space)&& this.grounded) {
         this.jump -= jumpHeight;
@@ -145,7 +147,7 @@ class Platform {
     this.y = y;
     this.width = width;
     this.height = height;
-    this.type = type; // 'solid' or 'passThrough'
+    this.type = type;
   }
 }
 
@@ -188,7 +190,7 @@ socket.on('playerDisconnected', (id) => {
     delete players[id]; 
 });
 const levelPlatforms = [
-  new Platform(50, 400, 150, 20, 'passThrough'),
+  new Platform(50, 400, 150, 20, 'pass'),
   new Platform(200, 250, 100, 20, 'solid')
 ];
 
